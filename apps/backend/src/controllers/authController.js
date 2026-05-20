@@ -16,13 +16,7 @@ export async function login(req, res) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  await writeAuditLog({
-    action: "auth.login",
-    actor: user.email,
-    details: { role: user.role }
-  });
-
-  return res.json({
+  const response = {
     token: signToken(user),
     user: {
       id: user._id,
@@ -30,5 +24,15 @@ export async function login(req, res) {
       email: user.email,
       role: user.role
     }
+  };
+
+  void writeAuditLog({
+    action: "auth.login",
+    actor: user.email,
+    details: { role: user.role }
+  }).catch((error) => {
+    console.error("Failed to write login audit log", error);
   });
+
+  return res.json(response);
 }

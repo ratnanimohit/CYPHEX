@@ -7,7 +7,7 @@ export function MetricCard({ title, value, accent = "neon", subtitle }) {
   };
 
   return (
-    <div className="rounded-3xl border border-cyber-line bg-cyber-panel/70 p-5 shadow-neon">
+    <div className="stat-card card glow rounded-3xl border border-cyber-line bg-cyber-panel/70 p-5 shadow-neon">
       <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{title}</p>
       <div className="mt-4 flex items-end justify-between">
         <p className={`text-4xl font-semibold ${accentMap[accent]}`}>{value}</p>

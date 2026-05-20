@@ -4,18 +4,187 @@
 
 :root {
   color-scheme: dark;
+  --bg-deep: #050b18;
+  --gradient-brand: linear-gradient(135deg, #00ffc6, #007bff);
+  --success-neon: #00ffc6;
+  --warning-neon: #ffc857;
+  --danger-neon: #ff4d6d;
+  --info-neon: #3da9fc;
 }
 
 body {
   @apply bg-cyber-bg text-slate-100 font-display;
+  position: relative;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
   background-image:
-    radial-gradient(circle at top, rgba(57, 160, 255, 0.18), transparent 32%),
-    linear-gradient(180deg, rgba(3, 7, 18, 0.92), rgba(3, 7, 18, 1)),
-    linear-gradient(rgba(57, 160, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 160, 255, 0.05) 1px, transparent 1px);
-  background-size: auto, auto, 28px 28px, 28px 28px;
+    radial-gradient(circle at top, #0a1f44, #050b18 58%),
+    linear-gradient(rgba(61, 169, 252, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 169, 252, 0.05) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+  background-color: var(--bg-deep);
 }
 
 #root {
   @apply min-h-screen;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+#root > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app {
+  display: flex;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  height: calc(100vh - 60px);
+  overflow: auto;
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 198, 0.2);
+  border-radius: 16px;
+}
+
+.glow {
+  box-shadow: 0 0 20px rgba(0, 255, 198, 0.3);
+}
+
+.tag.high {
+  background: rgba(255, 77, 109, 0.15);
+  color: #ff4d6d;
+}
+
+.progress {
+  background: linear-gradient(90deg, #00ffc6, #ffc857, #ff4d6d);
+}
+
+.toggle-on {
+  background: linear-gradient(135deg, #00ffc6, #00a3ff);
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 255, 198, 0.4);
+}
+
+.workflow {
+  text-align: center;
+  color: #00ffcc;
+  background: #000;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.workflow h1 {
+  font-size: 40px;
+  letter-spacing: 3px;
+}
+
+.steps {
+  margin-top: 40px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.step:hover {
+  box-shadow: 0 0 30px #00ffc6;
+}
+
+.box {
+  padding: 20px 40px;
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  margin: 10px;
+  font-size: 18px;
+  background: rgba(0, 255, 204, 0.1);
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 24px;
+  margin: 10px;
+}
+
+.active {
+  background: #00ffcc;
+  color: black;
+}
+
+.workflow-live-card {
+  animation: workflowPulse 2.4s ease-in-out infinite;
+}
+
+.workflow-live-card-active {
+  border-color: rgba(120, 255, 168, 0.6);
+  box-shadow: 0 0 28px rgba(120, 255, 168, 0.2);
+}
+
+.workflow-live-line {
+  height: 4px;
+  width: 100px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #00ffc3, transparent);
+  animation: flow 2s infinite;
+}
+
+@keyframes flow {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes workflowPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.92;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
 }

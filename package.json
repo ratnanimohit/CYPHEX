@@ -8,11 +8,15 @@
   ],
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run dev:backend & npm run dev:frontend",
+    "dev": "npm run build:frontend && npm run dev:backend",
+    "dev:watch": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build": "npm run build:frontend",
     "dev:frontend": "npm --workspace apps/frontend run dev",
     "dev:backend": "npm --workspace apps/backend run dev",
     "build:frontend": "npm --workspace apps/frontend run build",
-    "start:backend": "npm --workspace apps/backend run start",
-    "start:frontend": "npm --workspace apps/frontend run preview"
+    "start:backend": "npm --workspace apps/backend run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

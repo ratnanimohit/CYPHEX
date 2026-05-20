@@ -12,12 +12,27 @@ import { reportRouter } from "./routes/reportRoutes.js";
 import { alertRouter } from "./routes/alertRoutes.js";
 import { feedbackRouter } from "./routes/feedbackRoutes.js";
 import { adminRouter } from "./routes/adminRoutes.js";
+import searchRoutes from "./routes/searchRoutes.js";
 
 export function createApp() {
   const app = express();
 
+  const allowedOrigins = new Set(env.clientOrigins);
+
   app.use(helmet());
-  app.use(cors({ origin: env.clientOrigin, credentials: true }));
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (!origin || allowedOrigins.has(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error(`Origin ${origin} is not allowed by CORS`));
+      },
+      credentials: true
+    })
+  );
   app.use(express.json({ limit: "1mb" }));
   app.use(morgan("dev"));
 
@@ -25,6 +40,7 @@ export function createApp() {
     res.json({ status: "ok" });
   });
 
+  app.use("/api", searchRoutes);
   app.use("/api/auth", authRouter);
   app.use("/api/dashboard", requireAuth, dashboardRouter);
   app.use("/api/logs", requireAuth, logRouter);

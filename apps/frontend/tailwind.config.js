@@ -5,24 +5,25 @@ export default {
     extend: {
       colors: {
         cyber: {
-          bg: "#030712",
-          panel: "#08101f",
-          panelAlt: "#0c172b",
-          line: "#16314d",
-          neon: "#3cf2c9",
-          blue: "#39a0ff",
-          amber: "#f6c65b",
-          red: "#f87171"
+          bg: "#050B18",
+          panel: "#0a1324",
+          panelAlt: "#0d1a31",
+          line: "#153355",
+          neon: "#00FFC6",
+          blue: "#007BFF",
+          amber: "#FFC857",
+          red: "#FF4D6D"
         }
       },
       boxShadow: {
-        neon: "0 0 0 1px rgba(60,242,201,0.25), 0 0 30px rgba(57,160,255,0.15)"
+        neon: "0 0 0 1px rgba(0,255,198,0.22), 0 0 24px rgba(0,255,198,0.18)",
+        glow: "0 0 20px rgba(0,255,198,0.3)"
       },
       backgroundImage: {
         grid: "linear-gradient(rgba(57,160,255,0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(57,160,255,0.09) 1px, transparent 1px)"
       },
       fontFamily: {
-        display: ["ui-sans-serif", "system-ui", "sans-serif"]
+        display: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
       }
     }
   },

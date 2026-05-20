@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "start:plain": "node src/plainServer.js",
+    "dev:plain": "node src/plainServer.js",
+    "dev:server": "node src/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

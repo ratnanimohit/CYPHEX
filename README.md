@@ -1,150 +1,136 @@
-# IntrusionX
+# Cyphex
 
-IntrusionX is a full-stack AI-powered Data Privacy Compliance Checker with:
+Cyphex is a premium, full-stack, AI-powered Data Privacy Compliance Checker and operations console. It helps secure datasets and applications by identifying and automatically remediating data privacy risks in real-time.
 
-- React + Tailwind frontend
-- Node.js + Express backend
-- MongoDB persistence
-- Python FastAPI AI service for PII detection and rule evaluation
-- Real-time alerts over Socket.IO
-- PDF report export, immutable audit logs, feedback loop, and admin rule controls
+- **React + Tailwind CSS** frontend with a beautiful, high-fidelity dark console interface.
+- **Node.js + Express** backend serving APIs and real-time Socket.IO alerts.
+- **Single-Unit Deployment**: The backend Express server natively builds and serves the frontend as static files under one port.
+- **MongoDB Persistence** for log analysis, custom rules, reports, and persistent auditing.
+- **Python FastAPI AI service** for robust PII detection and automated rule validation.
+- **Auto-Remediation** including data masking, access blocking, and payload encryption.
+
+---
 
 ## Folder Structure
 
 ```text
-apps/
-  ai-service/
-    app/
-      main.py
-      models.py
-      rules.py
-      sample_data.py
-      services.py
-    requirements.txt
-  backend/
-    src/
-      config/
-      controllers/
-      middleware/
-      models/
-      routes/
-      services/
-      utils/
-      server.js
-    package.json
-  frontend/
-    src/
-      components/
-      contexts/
-      hooks/
-      layouts/
-      pages/
-      services/
-      App.jsx
-      main.jsx
-    package.json
-    tailwind.config.js
-data/
-  seed/
+CYPHEX/
+├── apps/
+│   ├── ai-service/
+│   │   ├── app/
+│   │   │   ├── main.py
+│   │   │   ├── models.py
+│   │   │   ├── rules.py
+│   │   │   ├── sample_data.py
+│   │   │   └── services.py
+│   │   └── requirements.txt
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── middleware/
+│   │   │   ├── models/
+│   │   │   ├── routes/
+│   │   │   ├── services/
+│   │   │   ├── utils/
+│   │   │   ├── app.js
+│   │   │   ├── plainServer.js
+│   │   │   └── server.js
+│   │   └── package.json
+│   └── frontend/
+│       ├── src/
+│       │   ├── components/
+│       │   ├── contexts/
+│       │   ├── hooks/
+│       │   ├── layouts/
+│       │   ├── pages/
+│       │   ├── services/
+│       │   ├── App.jsx
+│       │   ├── main.jsx
+│       │   └── index.css
+│       ├── package.json
+│       └── tailwind.config.js
+├── data/
+│   ├── mongo/
+│   └── seed/
+├── .env.example
+├── package.json
+├── package-lock.json
+└── README.md
 ```
 
-## Setup
+---
+
+## Setup & Running
 
 ### 1. Clone And Prepare Environment
+
+Create your local configuration file from the template:
 
 ```bash
 cp .env.example .env
 ```
 
-Update `.env` with your MongoDB connection string and JWT secret.
+Make sure the `.env` variables align with your local database and desired settings.
 
 ### 2. Start MongoDB
 
-Use a local MongoDB instance or MongoDB Atlas.
-
-Example local connection:
-
-```bash
+Cyphex requires a running MongoDB database. Ensure your instance is active at:
+```text
 mongodb://127.0.0.1:27017/intrusionx
 ```
 
-### 3. Run The AI Service
+### 3. Run the AI Service
+
+The AI detection microservice runs on FastAPI.
 
 ```bash
 cd apps/ai-service
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate  # Or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 4. Run The Backend
+### 4. Running the Application
+
+Cyphex has been architected to run as a single, combined unit or in watch mode for development:
+
+#### **Single Unit Mode (Recommended)**
+Builds the React frontend and boots up the backend Express server which serves both the API endpoints and frontend assets on a single port (**5055**):
 
 ```bash
-cd apps/backend
-npm install
+# Run from repository root
 npm run dev
 ```
+Open [http://127.0.0.1:5055](http://127.0.0.1:5055) in your web browser.
 
-### 5. Run The Frontend
-
-```bash
-cd apps/frontend
-npm install
-npm run dev
-```
-
-### Root Workspace Commands
-
-From the repository root you can now use:
+#### **Development Watch Mode**
+Runs both the backend Node.js server and Vite dev server concurrently with hot reloading:
 
 ```bash
-npm start
+# Run from repository root
+npm run dev:watch
 ```
+- Frontend: [http://127.0.0.1:5180](http://127.0.0.1:5180)
+- Backend: [http://127.0.0.1:5055](http://127.0.0.1:5055)
 
-This starts both the backend and frontend development servers together.
+---
 
-You can also run them individually from the root:
+## Demo Access
 
-```bash
-npm run dev:backend
-npm run dev:frontend
-```
+The backend automatically seeds a default administrator on startup if no users exist:
 
-### 6. Demo Login
+- **Email**: `admin@intrusionx.io`
+- **Password**: `Admin@123`
 
-The backend seeds a default admin user on startup if it does not exist:
+---
 
-- email: `admin@intrusionx.io`
-- password: `Admin@123`
+## Key Features
 
-## Main Features
-
-- Data ingestion from API, logs, and database-style batch input
-- Regex + heuristic NLP PII detection
-- Sensitive/non-sensitive classification
-- GDPR-like compliance rule engine
-- Unauthorized access and data exposure detection
-- Auto-remediation with masking, request blocking, and encryption
-- Real-time alerts and dashboard updates
-- Immutable audit log trail
-- Admin rule management and analyst feedback loop
-- Compliance report export to PDF
-
-## API Overview
-
-- `POST /api/auth/login`
-- `GET /api/dashboard/summary`
-- `GET /api/logs`
-- `POST /api/ingestion`
-- `POST /api/ingestion/batch`
-- `GET /api/reports`
-- `GET /api/reports/:id/pdf`
-- `GET /api/alerts`
-- `POST /api/feedback`
-- `GET /api/admin/rules`
-- `PUT /api/admin/rules/:ruleId`
-
-## Sample Data
-
-Sample payloads are stored under `data/seed/`.
+- **PII Detection**: Regex and NLP-based pattern matching (Email, Phone, Aadhaar, Credit Card, etc.).
+- **Compliance Policy Engine**: Configurable rules such as geographic residency checks (e.g. Aadhaar processed only in India region) and ownership restrictions.
+- **Real-time Alerting**: Live console notifications driven by Socket.IO.
+- **Remediation Actions**: Real-time content masking, routing blocks, and encryption.
+- **Export & Audit**: Immutable audit logging and compliance reporting with PDF downloads.
+- **Interactive Console**: Built-in rules control panel and user feedback loops.

@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { analyzeLogs, sampleBackendLogs } from "./services/logAnalysisService.js";
+import mime from "mime-types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +19,20 @@ const env = {
   jwtSecret: process.env.JWT_SECRET || "change-me"
 };
 
+function logServerStartupError(error) {
+  if (error?.code === "EADDRINUSE") {
+    console.error(`Port ${env.port} is already in use. Stop the other process or change PORT.`);
+    return;
+  }
+
+  if (error?.code === "EPERM") {
+    console.error(`Permission denied while binding to port ${env.port}. Check your environment or sandbox.`);
+    return;
+  }
+
+  console.error("Failed to start backend server", error);
+}
+
 const store = {
   users: [],
   rules: [],
@@ -25,6 +41,8 @@ const store = {
   reports: [],
   auditLogs: []
 };
+
+const searchLogs = sampleBackendLogs;
 
 function sendJson(res, status, payload) {
   const data = Buffer.from(JSON.stringify(payload));
@@ -346,6 +364,26 @@ async function handler(req, res) {
     return;
   }
 
+  if (req.method === "GET" && pathname === "/api/search") {
+    const query = url.searchParams.get("q");
+    const level = url.searchParams.get("level");
+    let result = searchLogs;
+
+    if (query) {
+      result = result.filter((log) => log.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    if (level) {
+      result = result.filter((log) => log.includes(level.toUpperCase()));
+    }
+
+    sendJson(res, 200, {
+      count: result.length,
+      data: result
+    });
+    return;
+  }
+
   if (req.method === "POST" && pathname === "/api/auth/login") {
     const body = await parseBody(req);
     const user = store.users.find((item) => item.email === body.email);
@@ -385,6 +423,17 @@ async function handler(req, res) {
 
   if (req.method === "GET" && pathname === "/api/logs") {
     sendJson(res, 200, { records: store.records.slice(0, 50), auditLogs: store.auditLogs.slice(0, 100) });
+    return;
+  }
+
+  if (req.method === "POST" && pathname === "/api/logs/analyze") {
+    const body = await parseBody(req);
+    const logs = Array.isArray(body.logs) && body.logs.length ? body.logs : sampleBackendLogs;
+    const data = analyzeLogs(logs);
+    sendJson(res, 200, {
+      count: data.length,
+      data
+    });
     return;
   }
 
@@ -483,7 +532,19 @@ async function handler(req, res) {
     return;
   }
 
-  sendJson(res, 404, { message: "Not found" });
+  // Serve static frontend files
+  const distPath = path.resolve(__dirname, "../../../apps/frontend/dist");
+  let filePath = path.join(distPath, pathname === "/" ? "index.html" : pathname);
+
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(distPath, "index.html");
+  }
+
+  const ext = path.extname(filePath);
+  const mimeType = mime.lookup(ext) || "text/html";
+  const fileContent = fs.readFileSync(filePath);
+  res.writeHead(200, { "Content-Type": mimeType, "Content-Length": fileContent.length });
+  res.end(fileContent);
 }
 
 await seedInitialData();
@@ -493,6 +554,11 @@ const server = http.createServer((req, res) => {
     console.error(error);
     sendJson(res, 500, { message: error.message || "Internal server error" });
   });
+});
+
+server.on("error", (error) => {
+  logServerStartupError(error);
+  process.exit(1);
 });
 
 server.listen(env.port, "127.0.0.1", () => {

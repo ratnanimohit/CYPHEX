@@ -1,13 +1,16 @@
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 import { TopBar } from "../components/TopBar";
 
-export function AppLayout({ children }) {
+export function AppLayout() {
   return (
-    <div className="flex min-h-screen">
+    <div className="app min-h-screen">
       <Sidebar />
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="main min-h-screen">
         <TopBar />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="content">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

@@ -8,5 +8,5 @@ export async function createAlert({ title, message, severity, recordRef = null }
 }
 
 export async function getRecentAlerts() {
-  return Alert.find().sort({ createdAt: -1 }).limit(20);
+  return Alert.find().sort({ createdAt: -1 }).limit(20).lean();
 }
